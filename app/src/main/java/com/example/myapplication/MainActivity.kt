@@ -3,18 +3,25 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,11 +36,11 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-                    MyConstraintLayout(modifier = Modifier.padding(padding))
+                    MyConstraintLayout( modifier = Modifier.padding(padding), 4)
                 }
 
             }
@@ -57,6 +64,7 @@ fun MyConstraintLayout( modifier: Modifier = Modifier, tipus:Int = 1) {
         2 -> MyConstraintLayout_withoutGuidelines(modifier)
         3 -> MyConstraintLayout_chains(modifier)
         4 -> MyConstraintLayout_text(modifier)
+        5 -> MyConstraintLayout_Images(modifier)
         else -> Greeting("ERROR", modifier)
     }
 }
@@ -161,11 +169,35 @@ fun MyConstraintLayout_text(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun MyConstraintLayout_Images(modifier: Modifier = Modifier) {
+    ConstraintLayout(modifier.fillMaxSize().padding(vertical=100.dp)) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_background),
+            contentDescription = "Example",
+            alpha = 0.75f,
+            //modifier = Modifier.clip(RoundedCornerShape(50f))
+            //modifier = Modifier.clip(CircleShape)
+            //modifier = Modifier.clip(CircleShape).border(4.dp, Color.Red)
+            modifier = Modifier.clip(CircleShape).border(4.dp, Color.Red, CircleShape)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = "Example",
+            alpha = 1f
+        )
+        Icon(imageVector = Icons.Sharp.Star,
+            contentDescription = "Icon Example",
+            tint = Color.Blue)
+    }
+
+}
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        MyConstraintLayout(tipus = 4)
+        MyConstraintLayout(tipus = 5)
     }
 }
