@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
@@ -43,29 +44,41 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun MyConstraintLayout(modifier: Modifier = Modifier) {
+fun MyConstraintLayout( modifier: Modifier = Modifier, tipus:Int = 1) {
+
+    when (tipus) {
+        1 -> MyConstraintLayout_withGuidelines(modifier)
+        2 -> MyConstraintLayout_withoutGuidelines(modifier)
+        3 -> MyConstraintLayout_chains(modifier)
+        else -> Greeting("ERROR", modifier)
+    }
+}
+
+
+@Composable
+fun MyConstraintLayout_withoutGuidelines(modifier: Modifier = Modifier) {
     ConstraintLayout(modifier.fillMaxSize()) {
         val (boxRed, boxYellow, boxGreen, boxCyan, boxMagenta) = createRefs()
 
-        Box(modifier = Modifier.size(120.dp).background(Color.Red).constrainAs(boxRed){
+        Box(modifier = Modifier.size(120.dp).background(Color.Red).constrainAs(boxRed) {
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         })
-        Box(modifier = Modifier.size(120.dp).background(Color.Yellow).constrainAs(boxYellow){
+        Box(modifier = Modifier.size(120.dp).background(Color.Yellow).constrainAs(boxYellow) {
             bottom.linkTo(boxRed.top)
             start.linkTo(boxRed.start)
         })
-        Box(modifier = Modifier.size(120.dp).background(Color.Green).constrainAs(boxGreen){
+        Box(modifier = Modifier.size(120.dp).background(Color.Green).constrainAs(boxGreen) {
             top.linkTo(boxRed.bottom)
             start.linkTo(boxRed.start)
         })
-        Box(modifier = Modifier.size(120.dp).background(Color.Cyan).constrainAs(boxCyan){
+        Box(modifier = Modifier.size(120.dp).background(Color.Cyan).constrainAs(boxCyan) {
             bottom.linkTo(boxRed.bottom)
             end.linkTo(boxRed.start)
         })
-        Box(modifier = Modifier.size(120.dp).background(Color.Magenta).constrainAs(boxMagenta){
+        Box(modifier = Modifier.size(120.dp).background(Color.Magenta).constrainAs(boxMagenta) {
             bottom.linkTo(boxRed.bottom)
             start.linkTo(boxRed.end)
         })
@@ -73,10 +86,53 @@ fun MyConstraintLayout(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun MyConstraintLayout_withGuidelines(modifier: Modifier = Modifier) {
+    ConstraintLayout(modifier.fillMaxSize()) {
+        val topGuide = createGuidelineFromTop(0.25f)
+        val leftGuide = createGuidelineFromStart(0.25f)
+        //val bottomGuide = createGuidelineFromBottom(0.25f)
+        //val rightGuide = createGuidelineFromEnd(0.25f)
+
+        val boxRed = createRef()
+        Box(modifier = Modifier.size(120.dp).background(Color.Red).constrainAs(boxRed){
+            top.linkTo(topGuide)
+            start.linkTo(leftGuide)
+        })
+
+    }
+}
+
+@Composable
+fun MyConstraintLayout_chains(modifier: Modifier = Modifier) {
+    ConstraintLayout(modifier.fillMaxSize().padding(vertical=100.dp)) {
+        val (boxRed, boxYellow, boxGreen) = createRefs()
+        Box(modifier.size(50.dp).background(Color.Red).constrainAs(boxRed){
+            start.linkTo(parent.start)
+            end.linkTo(boxYellow.start)
+        })
+        Box(modifier.size(50.dp).background(Color.Yellow).constrainAs(boxYellow){
+            start.linkTo(boxRed.end)
+            end.linkTo(boxGreen.start)
+        })
+        Box(modifier.size(50.dp).background(Color.Green).constrainAs(boxGreen){
+            start.linkTo(boxYellow.end)
+            end.linkTo(parent.end)
+        })
+
+        //createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.Packed)
+        //createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.Spread)
+        createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.SpreadInside)
+
+
+    }
+}
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        MyConstraintLayout()
+        MyConstraintLayout(tipus = 3)
     }
 }
