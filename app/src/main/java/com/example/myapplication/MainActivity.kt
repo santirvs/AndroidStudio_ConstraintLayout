@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,8 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -50,6 +56,7 @@ fun MyConstraintLayout( modifier: Modifier = Modifier, tipus:Int = 1) {
         1 -> MyConstraintLayout_withGuidelines(modifier)
         2 -> MyConstraintLayout_withoutGuidelines(modifier)
         3 -> MyConstraintLayout_chains(modifier)
+        4 -> MyConstraintLayout_text(modifier)
         else -> Greeting("ERROR", modifier)
     }
 }
@@ -123,6 +130,32 @@ fun MyConstraintLayout_chains(modifier: Modifier = Modifier) {
         //createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.Packed)
         //createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.Spread)
         createHorizontalChain(boxRed, boxYellow, boxGreen, chainStyle = ChainStyle.SpreadInside)
+    }
+}
+
+@Composable
+fun MyConstraintLayout_text(modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxSize().padding(vertical=100.dp)) {
+        Text(text = "This is my text example")
+        Text(
+            "This is my text example",
+            color = Color.Red,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Cursive,
+            textDecoration = TextDecoration.Underline
+        )
+
+        val myStyle = TextStyle(color = Color.Red,
+            fontSize = 50.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = FontFamily.Cursive,
+            textDecoration = TextDecoration.Underline)
+
+        Text(
+            "This is my text example",
+            style = myStyle
+        )
 
 
     }
@@ -133,6 +166,6 @@ fun MyConstraintLayout_chains(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        MyConstraintLayout(tipus = 3)
+        MyConstraintLayout(tipus = 4)
     }
 }
